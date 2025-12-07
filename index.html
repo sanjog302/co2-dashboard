@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Global CO₂ & Air Quality Dashboard | By Sanjog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d1117;
+    color: #fff;
+    text-align: center;
+  }
+
+  header {
+    padding: 25px 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #4db8ff;
+  }
+
+  .sub {
+    opacity: 0.8;
+    font-size: 14px;
+  }
+
+  .founder {
+    margin-top: 5px;
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  .card {
+    max-width: 900px;
+    margin: 25px auto;
+    background: rgba(255,255,255,0.06);
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    text-align: left;
+  }
+
+  iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: 10px;
+  }
+
+  h2 {
+    color: #4db8ff;
+    margin-top: 0;
+  }
+
+  .info-box {
+    background: rgba(255,255,255,0.07);
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  footer {
+    margin-top: 40px;
+    opacity: 0.5;
+    font-size: 13px;
+    padding-bottom: 30px;
+  }
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Global CO₂ & Air Quality Dashboard</h1>
+  <p class="sub">Real-time CO₂ in Pokhara + Global CO₂ levels + AQI</p>
+  <p class="founder">Created by <strong>Sanjog</strong></p>
+</header>
+
+<div class="card">
+  <h2>📍 Live CO₂ Data — Pokhara, Nepal</h2>
+  <iframe src="https://co2detector-system.udom.cloud/html/main.html"></iframe>
+</div>
+
+<div class="card">
+  <h2>🌍 Global CO₂ Level (NOAA)</h2>
+  <div class="info-box" id="globalCO2">Loading global CO₂ data…</div>
+</div>
+
+<div class="card">
+  <h2>🌆 CO₂ & AQI in Major World Cities</h2>
+  <div class="info-box" id="cityData">Loading city air data…</div>
+</div>
+
+<div class="card">
+  <h2>⚠️ CO₂ vs AQI — Important Difference</h2>
+  <div class="info-box">
+    <strong>CO₂ (Carbon Dioxide)</strong> measures greenhouse gas concentration.<br>
+    It contributes directly to <strong>global warming and climate change</strong>.  
+    High CO₂ = Earth warms faster.
+
+    <br><br>
+
+    <strong>AQI (Air Quality Index)</strong> measures air pollutants like PM2.5, PM10, NO₂, SO₂.  
+    This tells how safe the air is to breathe for humans.
+
+    <br><br>
+    ✅ CO₂ affects the climate.  
+    ❗ AQI affects your health.  
+    These two are very different.
+  </div>
+</div>
+
+<script>
+// --- GLOBAL CO2 FROM NOAA ---
+fetch("https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.json")
+  .then(r => r.json())
+  .then(data => {
+    let last = data.co2[data.co2.length - 1][1]; 
+    document.getElementById("globalCO2").innerHTML =
+      "<strong>Global CO₂:</strong> " + last + " ppm<br>Source: NOAA Mauna Loa Observatory";
+  })
+  .catch(() => {
+    document.getElementById("globalCO2").innerText = "Could not load global CO₂ data.";
+  });
+
+// --- DEMO AQI & CO2 FOR CITIES (SIMPLE STATIC EXAMPLE) ---
+let cities = {
+  "Tokyo": { co2: 425, aqi: 32 },
+  "New York": { co2: 421, aqi: 45 },
+  "London": { co2: 418, aqi: 27 },
+  "New Delhi": { co2: 430, aqi: 160 }
+};
+
+let txt = "";
+for (let city in cities) {
+  txt += `<strong>${city}</strong><br>
+          CO₂: ${cities[city].co2} ppm<br>
+          AQI: ${cities[city].aqi}<br><br>`;
+}
+document.getElementById("cityData").innerHTML = txt;
+</script>
+
+<footer>
+  © Global CO₂ Dashboard | Built by Sanjog
+</footer>
+
+</body>
+</html>
